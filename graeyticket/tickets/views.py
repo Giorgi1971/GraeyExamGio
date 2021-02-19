@@ -18,14 +18,6 @@ from .models import *
 
 def index(request: WSGIRequest):
     ticket_list = Ticket.objects.all().order_by('-pk')
-    # ticket_q = Q()
-    # q1 = request.GET.get('plate')
-    # if q1:
-    #     ticket_q &= Q(licence_plate__icontains=q1)
-    # cars_list = Ticket.objects.filter(plate_q).order_by('-pk')
-    # paginator = Paginator(cars_list, 7)  # Show 25 contacts per page.
-    # page_number = request.GET.get('page')
-    # page_obj = paginator.get_page(page_number)
     context = {
         'form': ticket_list,
     }

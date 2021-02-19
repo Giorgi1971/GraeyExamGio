@@ -23,7 +23,6 @@ def user_registration(request):
         user_create_form: CustomUserCreationForm = CustomUserCreationForm(request.POST, files=request.FILES)
         if user_create_form.is_valid():
             customer: User = user_create_form.save(commit=False)
-            customer.status = User.Status.customer
             customer.save()
             return redirect('user:user_login')
 
@@ -38,15 +37,14 @@ def user_registration(request):
 
 def user_login(request):
     if request.user.is_authenticated:
-        return redirect('wellwash:coupon')
+        return redirect('tickets:index')
     form = AuthenticationForm()
     if request.method == 'POST':
         form = AuthenticationForm(request=request, data=request.POST)
         if form.is_valid():
             login(request, form.get_user())
-            return redirect('wellwash:branch')
+            return redirect('tickets:index')
 
-    form = AuthenticationForm()
     return render(
         request,
         'user/login.html',
