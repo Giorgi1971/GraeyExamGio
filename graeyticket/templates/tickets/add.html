@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<form action="{% url 'wellwash:add_car' 'add_car' %}" method="post">
+    {% csrf_token %}
+    {{ order_form.as_p }}
+    {{ error }}
+    <input type="submit" value="Submit">
+</form>
+
+{% endblock %}

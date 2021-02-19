@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div style="padding:0 20px">
+    <div class="row"></div>
+
+    <button style="padding: 20px;"><a href="{% url 'wellwash:make_order' 'add' %}">დააჭირეთ აქ და დაჯავშნეთ თქვენთვის სასურველი დრო!</a></button>
+
+
+  <div class="row">
+    <form class="col s12" method="get" action=".">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col s12">
+                <div class="input-field inline">
+                    <input id="search_order" type="text" name="order" value="{{ request.GET.plate }}">
+                            <label for="search_order">Enter plate</label>
+                            <span class="helper-text" data-error="wrong" data-success="right">Format: Order or part Order</span>
+                </div>
+                <button >SEARCH</button>
+            </div>
+        </div>
+    </form>
+  </div>
+
+<!-- მანქანების ცხრილი-->
+<hr>
+
+    <table>
+
+        <thead>
+          <tr>
+              <th style="width: 10%">Car</th>
+              <th style="width: 10%">Washer</th>
+              <th style="width: 10%">Coupon</th>
+              <th style="width: 10%">Order</th>
+              <th style="width: 10%">Order</th>
+              <th style="width: 10%">Order</th>
+              <th style="width: 10%">Order</th>
+              <th style="width: 10%">Order</th>
+              <th style="width: 10%">Order</th>
+              <th style="width: 10%">Order</th>
+          </tr>
+        </thead>
+      </table>
+
+{% for order in page_obj %}
+    {# Each "contact" is a Contact model object. #}
+    <table>
+
+        <tbody>
+          <tr>
+            <td style="width: 10%">{{ order.car }}</td>
+            <td style="width: 10%">{{ order.employee }}</td>
+            <td style="width: 10%">{{ order.coupon }}</td>
+            <td style="width: 10%">{{ order.wash_type }}</td>
+            <td style="width: 10%">{{ order.box }}</td>
+            <td style="width: 10%">{{ order.my_wash_price }}</td>
+            <td style="width: 10%">{{ order.order_time }}</td>
+            <td style="width: 10%">{{ order.start_time }}</td>
+            <td style="width: 10%">{{ order.end_time }}</td>
+            <td style="width: 10%">{{ order.status }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+{% endfor %}
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+</div>
+
+
+
+{% endblock %}

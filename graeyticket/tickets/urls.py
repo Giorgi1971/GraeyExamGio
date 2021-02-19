@@ -5,5 +5,5 @@ from .views import *
 
 app_name = 'wellwash'
 urlpatterns = [
-    path('', index, name='index'),
+    path('tickets', index, name='index'),
     ]
