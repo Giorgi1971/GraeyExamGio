@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h4>Welcome! For Purchase You Must Log-in!</h4>
+
+<div class="container">
+    <div class="row">
+        {% for ticket in ticket_list %}
+        {% if forloop.counter0|divisibleby:4 %}
+        <div class="row">
+            {% endif %}
+            <div class="col s12 m3 l3 center">
+                <div class="row">
+                    <div class="col s12">
+                        <div class="card" style="background-color: #ccffcc">
+                            <div class="card-content">
+                                <p>Ticket # {{ ticket.pk }}</p>
+                                <p>{{ ticket.name }}</p>
+                            </div>
+                            <div class="card-action">
+                                {% if ticket.orders %}
+                                <span style="color: rgb(0,0,0); font-weight: bold;">SALED</span>
+                                {% else %}
+                                <span style="color: rgb(200,50,50); font-weight: bold;">FREE</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% if forloop.counter|divisibleby:4 or forloop.last %}
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

@@ -23,12 +23,11 @@ def index(request: WSGIRequest):
 
 
 def tickets(request: WSGIRequest):
-    print(timezone.now())
     ticket_list = Ticket.objects.all()
     context = {
         'ticket_list': ticket_list,
     }
-    return render(request=request, template_name='tickets/index.html', context=context)
+    return render(request=request, template_name='tickets/tickets.html', context=context)
 
 
 def order_ticket(request: WSGIRequest, pk: int) -> HttpResponse:
@@ -50,7 +49,6 @@ def personal(request: WSGIRequest) -> HttpResponse:
         User.objects.all(),
         pk=request.user.id
     )
-    print(personal_page)
     now = timezone.now()
     # person_salary_info: Dict[str, Optional[Decimal]] = branch1.boxes.annotate(
     #     earned_per_order=Sum('orders__my_wash_price')).aggregate(
@@ -104,9 +102,7 @@ def order(request: WSGIRequest):
     order_q = Q()
     q1 = request.GET.get('name')
     if q1:
-        print(request.method)
         order_q &= Q()
-        print(order_q)
     order_list = Order.objects.filter(order_q).order_by('-pk')
     paginator = Paginator(order_list, 4)  # Show 12 contacts per page.
 

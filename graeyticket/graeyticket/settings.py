@@ -139,4 +139,4 @@ DATE_INPUT_FORMATS = [
 
 LOGIN_URL = 'user:user_login'
 LOGOUT_REDIRECT_URL = 'user:user_login'
-LOGIN_REDIRECT_URL = 'tickets:index'
+LOGIN_REDIRECT_URL = 'tickets:personal'

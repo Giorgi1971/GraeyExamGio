@@ -8,15 +8,11 @@ from django.db.models import TextChoices
 
 
 class Ticket(models.Model):
-    print(timezone.now)
     name = models.CharField(max_length=24, verbose_name='Name')
     start_time = models.DateTimeField(verbose_name='Start time', default=datetime(2021, 2, 3))
     end_time = models.DateTimeField(verbose_name="End time", default=datetime(2021, 2, 4))
     code = models.IntegerField(unique=True)
     price = models.IntegerField(default=12)
-    user = models.ForeignKey(to='user.User', on_delete=models.PROTECT,
-                             null=True, blank=True, related_name='user_ticket'
-                             )
 
     class StatusType(TextChoices):
         FREE = 'Free', _("Free")
@@ -35,6 +31,7 @@ class Order(models.Model):
     )
     t_price = models.IntegerField()
     sale_date = models.DateTimeField(verbose_name="Sale time", auto_now_add=True)
+    user = models.ForeignKey(to='user.User', on_delete=models.PROTECT, related_name='orders')
 
     def save(self, *args, **kwargs):
         if not self.pk:
