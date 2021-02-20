@@ -102,7 +102,7 @@ def order(request: WSGIRequest):
     order_q = Q()
     q1 = request.GET.get('name')
     if q1:
-        order_q &= Q()
+        order_q &= Q(ticket__name__icontains=q1)
     order_list = Order.objects.filter(order_q).order_by('-pk')
     paginator = Paginator(order_list, 4)  # Show 12 contacts per page.
 
