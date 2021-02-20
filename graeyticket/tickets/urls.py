@@ -9,5 +9,6 @@ urlpatterns = [
     path('tickets/', tickets, name='tickets'),
     path('personal/', personal, name='personal'),
     path('orders/', order, name='order'),
+    # path('tickets/<int:pk>/', order_ticket, name='order_ticket'),
     path('tickets/<int:pk>/', order_ticket, name='order_ticket'),
     ]

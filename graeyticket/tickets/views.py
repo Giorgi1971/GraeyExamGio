@@ -34,6 +34,13 @@ def order_ticket(request: WSGIRequest, pk: int) -> HttpResponse:
     order_form = OrderModelForm2()
     if request.method == 'POST':
         order_form = OrderModelForm2(request.POST)
+        q1 = request.POST.get('q')
+        print(q1)
+
+    order_q = Q()
+    if q1:
+        order_q &= Q(ticket__name__icontains=q1)
+
         if order_form.is_valid():
             order1 = order_form.save(commit=False)
             order1.save()
@@ -45,38 +52,36 @@ def order_ticket(request: WSGIRequest, pk: int) -> HttpResponse:
 
 
 def personal(request: WSGIRequest) -> HttpResponse:
-    personal_page: User = get_object_or_404(
-        User.objects.all(),
-        pk=request.user.id
-    )
+    personal_page: User = get_object_or_404(User.objects.all(), pk=request.user.id)
     now = timezone.now()
-    # person_salary_info: Dict[str, Optional[Decimal]] = branch1.boxes.annotate(
-    #     earned_per_order=Sum('orders__my_wash_price')).aggregate(
-    #     earned_money_year=Sum(
-    #         'earned_per_order',
-    #         filter=Q(orders__end_time__gte=now - timezone.timedelta(days=365))
-    #     ),
-    #     washed_last_year=Count(
-    #         'id',
-    #         filter=Q(orders__end_time__gte=now - timezone.timedelta(days=365))
-    #     ),
-    #     earned_money_month=Sum(
-    #         'earned_per_order',
-    #         filter=Q(orders__end_time__gte=now - timezone.timedelta(weeks=4))
-    #     ),
-    #     washed_last_month=Count(
-    #         'id',
-    #         filter=Q(orders__end_time__gte=now - timezone.timedelta(weeks=4))
-    #     ),
-    #     earned_money_week=Sum(
-    #         'earned_per_order',
-    #         filter=Q(orders__end_time__gte=now - timezone.timedelta(days=7))
-    #     ),
-    #     washed_last_week=Count(
-    #         'id',
-    #         filter=Q(orders__end_time__gte=now - timezone.timedelta(days=7))
-    #     )
-    # )
+
+    person_salary_info = personal_page.orders.all().annotate(
+        earned_per_order=Sum('t_price')).aggregate(
+        earned_money_year=Sum(
+            'earned_per_order',
+            filter=Q(sale_date__gte=now - timezone.timedelta(days=365))
+        ),
+        washed_last_year=Count(
+            'id',
+            filter=Q(sale_date__gte=now - timezone.timedelta(days=365))
+        ),
+        earned_money_month=Sum(
+            'earned_per_order',
+            filter=Q(sale_date__gte=now - timezone.timedelta(weeks=4))
+        ),
+        washed_last_month=Count(
+            'id',
+            filter=Q(sale_date__gte=now - timezone.timedelta(weeks=4))
+        ),
+        earned_money_week=Sum(
+            'earned_per_order',
+            filter=Q(sale_date__gte=now - timezone.timedelta(days=7))
+        ),
+        washed_last_week=Count(
+            'id',
+            filter=Q(sale_date__gte=now - timezone.timedelta(days=7))
+        )
+    )
     # bbb = tickets.count()
     # print(request.user.id)
     # free_boxes = tickets.filter(box_status='F').count()
@@ -94,7 +99,7 @@ def personal(request: WSGIRequest) -> HttpResponse:
         'ticket_list': ticket_list,
         # 'bbb': bbb,
         # 'free_boxes': free_boxes,
-        # **branch_salary_info,
+        **person_salary_info,
     })
 
 
