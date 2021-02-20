@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import validate_email
@@ -42,8 +44,8 @@ class User(AbstractUser):
     username = None
     email = models.EmailField(_('email address'), unique=True)
     salary = models.DecimalField(
-        max_digits=8, decimal_places=2, null=True,
-        verbose_name=_('Salary'), help_text='in Lari)'
+        max_digits=8, decimal_places=2,
+        verbose_name=_('Salary'), help_text='in Lari)', default=Decimal(100)
     )
     phone_number = models.CharField(max_length=50, verbose_name=_('Phone Number'))
 

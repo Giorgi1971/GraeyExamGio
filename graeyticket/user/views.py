@@ -1,27 +1,20 @@
 from django.conf import settings
 from django.contrib.auth import login, logout
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
-
-from .forms import CustomUserCreationForm
-from .models import User
+from django.shortcuts import redirect
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render
-
-# Create your views here.
-
-from django.http import HttpResponseRedirect
-from django.shortcuts import render
-
 from .forms import *
-from django.core.mail import send_mail
 
 
 def user_registration(request):
     user_create_form = CustomUserCreationForm()
+    print('1')
     if request.method == 'POST':
-        user_create_form: CustomUserCreationForm = CustomUserCreationForm(request.POST, files=request.FILES)
+        user_create_form: CustomUserCreationForm = CustomUserCreationForm(request.POST)
+        print('2')
         if user_create_form.is_valid():
+            print('3')
             customer: User = user_create_form.save(commit=False)
             customer.save()
             return redirect('user:user_login')
