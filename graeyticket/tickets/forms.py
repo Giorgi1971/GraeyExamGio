@@ -15,8 +15,9 @@ class OrderModelForm1(forms.ModelForm):
 
 class OrderModelForm2(forms.ModelForm):
     class Meta:
+        widgets = {'sale_date': DateTimeInput()}
         model = Order
-        fields = '__all__'
+        fields = ('ticket',)
 
 
 class TicketModelForm3(forms.ModelForm):

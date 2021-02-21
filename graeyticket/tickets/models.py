@@ -23,6 +23,10 @@ class Ticket(models.Model):
     def __str__(self):
         return f'{self.name} - {self.status}'
 
+    class Meta:
+        verbose_name = _('Ticket')
+        verbose_name_plural = _('Tickets')
+
 
 class Order(models.Model):
     ticket = models.OneToOneField(
@@ -32,6 +36,10 @@ class Order(models.Model):
     t_price = models.IntegerField(default=0)
     sale_date = models.DateTimeField(verbose_name="Sale time", auto_now_add=True)
     user = models.ForeignKey(to='user.User', on_delete=models.PROTECT, related_name='orders')
+
+    class Meta:
+        verbose_name = _('Order')
+        verbose_name_plural = _('Orders')
 
     def save(self, *args, **kwargs):
         if not self.pk:
