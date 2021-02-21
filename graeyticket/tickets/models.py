@@ -21,7 +21,7 @@ class Ticket(models.Model):
     status = models.CharField(max_length=5, choices=StatusType.choices, default=StatusType.FREE)
 
     def __str__(self):
-        return self.name
+        return f'{self.name} - {self.status}'
 
 
 class Order(models.Model):
@@ -29,7 +29,7 @@ class Order(models.Model):
         to='Ticket', on_delete=models.CASCADE,
         related_name='orders'
     )
-    t_price = models.IntegerField()
+    t_price = models.IntegerField(default=0)
     sale_date = models.DateTimeField(verbose_name="Sale time", auto_now_add=True)
     user = models.ForeignKey(to='user.User', on_delete=models.PROTECT, related_name='orders')
 
@@ -37,3 +37,6 @@ class Order(models.Model):
         if not self.pk:
             self.t_price = self.ticket.price
         super(Order, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return f'{self.ticket}-{self.t_price}-{self.sale_date}'

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h4>Welcome! For Purchase You Must Log-in!</h4>
+<h4>მოგესალმებით! ბილეთის შესაძენად გაიარეთ ავტორიზაცია (Log-in)!</h4>
 
 <div class="container">
     <div class="row">
@@ -16,12 +16,13 @@
                             <div class="card-content">
                                 <p>Ticket # {{ ticket.pk }}</p>
                                 <p>{{ ticket.name }}</p>
+                                <p>Price: {{ ticket.price }} GEL.</p>
                             </div>
                             <div class="card-action">
                                 {% if ticket.orders %}
-                                <span style="color: rgb(0,0,0); font-weight: bold;">SALED</span>
+                                <span style="color: rgb(0,0,0); font-weight: bold;">{{ ticket.status }}</span>
                                 {% else %}
-                                <span style="color: rgb(200,50,50); font-weight: bold;">FREE</span>
+                                <span style="color: rgb(200,50,50); font-weight: bold;">{{ ticket.status }}</span>
                                 {% endif %}
                             </div>
                         </div>

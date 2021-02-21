@@ -19,6 +19,8 @@ from .models import *
 
 
 def index(request: WSGIRequest):
+    if request.user.is_authenticated:
+        return redirect('tickets:personal')
     return redirect('/tickets')
 
 
@@ -31,10 +33,10 @@ def tickets(request: WSGIRequest):
 
 
 def order_ticket(request: WSGIRequest, pk: int) -> HttpResponse:
-    order_form = OrderModelForm2()
-    if request.method == 'POST':
-        order_form = OrderModelForm2(request.POST)
-        q1 = request.POST.get('q')
+    order_form = OrderModelForm1()
+    q1 = request.POST.get('q')
+    if request.method == 'POST' and q1:
+        order_form = OrderModelForm1(request.POST)
         print(q1)
 
     order_q = Q()
@@ -43,6 +45,7 @@ def order_ticket(request: WSGIRequest, pk: int) -> HttpResponse:
 
         if order_form.is_valid():
             order1 = order_form.save(commit=False)
+            order1
             order1.save()
             return redirect('../')
 
@@ -52,7 +55,34 @@ def order_ticket(request: WSGIRequest, pk: int) -> HttpResponse:
 
 
 def personal(request: WSGIRequest) -> HttpResponse:
+    order_form1 = OrderModelForm1()
+    order_form2 = OrderModelForm2()
+    q1 = request.POST.get('q')
+    if q1 and request.method == 'POST':
+        order_form2 = OrderModelForm2(request.POST)
+        print(q1)
+        if order_form2.is_valid():
+            order1 = order_form2.save(commit=False)
+            order1.save()
+        else:
+            print('+-+-+-')
+
+    if not q1 and request.method == 'POST':
+
+        order_form1 = OrderModelForm1(request.POST)
+        if order_form1.is_valid():
+            order1 = order_form1.save(commit=False)
+            order1.user_id = request.user.id
+            order1.t_price = 1
+            order1.save()
+            tt = Ticket.objects.all().get(pk=order1.ticket_id)
+            tt.status = Ticket.StatusType.SALED
+            tt.save()
+
     personal_page: User = get_object_or_404(User.objects.all(), pk=request.user.id)
+    print(personal_page)
+    last = personal_page.orders.all().order_by('-sale_date')[0]
+    print(last)
     now = timezone.now()
 
     person_salary_info = personal_page.orders.all().annotate(
@@ -82,23 +112,14 @@ def personal(request: WSGIRequest) -> HttpResponse:
             filter=Q(sale_date__gte=now - timezone.timedelta(days=7))
         )
     )
-    # bbb = tickets.count()
-    # print(request.user.id)
-    # free_boxes = tickets.filter(box_status='F').count()
-    # form = OrderModelForm1()
-    # if request.method == 'POST':
-    #     form = OrderModelForm1(request.POST)
-    #     if form.is_valid():
-    #         order1: Order = form.save(commit=False)
-    #         # order1.start_time = timezone.now()
-    #         order1.save()
-    #         return redirect('wellwash:order')
-    ticket_list = Ticket.objects.all()
+
+    ticket_list = Ticket.objects.all().order_by('-pk')
+
     return render(request, template_name='tickets/personal.html', context={
+        'form': order_form1,
         'personal': personal_page,
         'ticket_list': ticket_list,
-        # 'bbb': bbb,
-        # 'free_boxes': free_boxes,
+        'last': last,
         **person_salary_info,
     })
 

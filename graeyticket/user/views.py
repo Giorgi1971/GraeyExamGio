@@ -30,14 +30,14 @@ def user_registration(request):
 
 def user_login(request):
     if request.user.is_authenticated:
-        return redirect('tickets:index')
+        return redirect('tickets:personal')
     form = AuthenticationForm()
     if request.method == 'POST':
         form = AuthenticationForm(request=request, data=request.POST)
         if form.is_valid():
             login(request, form.get_user())
-            return redirect('tickets:index')
-
+            return redirect('tickets:personal')
+    print('ppo')
     return render(
         request,
         'user/login.html',

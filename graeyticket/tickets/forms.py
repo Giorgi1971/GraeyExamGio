@@ -8,12 +8,18 @@ class DateTimeInput(forms.DateTimeInput):
 
 class OrderModelForm1(forms.ModelForm):
     class Meta:
-        widgets = {'end_time': DateTimeInput(), 'start_time': DateTimeInput()}
+        widgets = {'sale_date': DateTimeInput()}
         model = Order
         fields = ('ticket',)
 
 
 class OrderModelForm2(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = '__all__'
+
+
+class TicketModelForm3(forms.ModelForm):
     class Meta:
         widgets = {'end_time': DateTimeInput(), 'start_time': DateTimeInput()}
         model = Order
