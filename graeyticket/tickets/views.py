@@ -32,28 +32,6 @@ def tickets(request: WSGIRequest):
     return render(request=request, template_name='tickets/tickets.html', context=context)
 
 
-def order_ticket(request: WSGIRequest, pk: int) -> HttpResponse:
-    order_form = OrderModelForm1()
-    q1 = request.POST.get('ticket')
-    if request.method == 'POST' and q1:
-        order_form = OrderModelForm1(request.POST)
-        print(q1)
-
-    order_q = Q()
-    if q1:
-        order_q &= Q(ticket__name__icontains=q1)
-
-        if order_form.is_valid():
-            order1 = order_form.save(commit=False)
-            order1
-            order1.save()
-            return redirect('../')
-
-    return render(request, template_name='tickets/personal.html', context={
-        'form': order_form
-    })
-
-
 def personal(request: WSGIRequest) -> HttpResponse:
     order_form1 = OrderModelForm1()
     order_form2 = OrderModelForm2()
@@ -69,12 +47,8 @@ def personal(request: WSGIRequest) -> HttpResponse:
             tt = Ticket.objects.all().get(pk=order2.ticket_id)
             tt.status = Ticket.StatusType.SALED
             tt.save()
-        else:
-            print('+-+-+-')
 
     if not q1 and request.method == 'POST':
-        print(request.POST)
-        print('______')
         order_form1 = OrderModelForm1(request.POST)
         if order_form1.is_valid():
             order1 = order_form1.save(commit=False)
@@ -86,11 +60,9 @@ def personal(request: WSGIRequest) -> HttpResponse:
             tt.save()
 
     personal_page: User = get_object_or_404(User.objects.all(), pk=request.user.id)
-    print(personal_page)
     last = personal_page.orders.all().order_by('-sale_date')
     if len(last) > 0:
         last = last[0]
-    print(last)
     now = timezone.now()
 
     person_salary_info = personal_page.orders.all().annotate(

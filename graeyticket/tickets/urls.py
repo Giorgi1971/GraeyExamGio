@@ -11,5 +11,4 @@ urlpatterns = [
     path('tickets/', tickets, name='tickets'),
     path('personal/', lr(personal), name='personal'),
     path('orders/', lr(order), name='order'),
-    path('order_add/<int:pk>/', order_ticket, name='order_ticket'),
     ]
