@@ -9,12 +9,9 @@ from .forms import *
 
 def user_registration(request):
     user_create_form = CustomUserCreationForm()
-    print('1')
     if request.method == 'POST':
         user_create_form: CustomUserCreationForm = CustomUserCreationForm(request.POST)
-        print('2')
         if user_create_form.is_valid():
-            print('3')
             customer: User = user_create_form.save(commit=False)
             customer.save()
             return redirect('user:user_login')
@@ -37,7 +34,6 @@ def user_login(request):
         if form.is_valid():
             login(request, form.get_user())
             return redirect('tickets:personal')
-    print('ppo')
     return render(
         request,
         'user/login.html',

@@ -1,11 +1,10 @@
 from django.urls import path
 from django.contrib.auth.decorators import login_required as lr
-
-
-from . import views
 from .views import *
 
+
 app_name = 'tickets'
+
 urlpatterns = [
     path('', index, name='index'),
     path('tickets/', tickets, name='tickets'),

@@ -2,7 +2,6 @@
 {% block content %}
 
 <div class="row">
-
 </div>
 
 <div style="padding:0 20px">
@@ -42,7 +41,7 @@
             <tbody>
             <tr>
                 <td style="width: 20%">{{ ticket.ticket }}</td>
-                <td style="width: 20%">{{ ticket.ticket.user }}</td>
+                <td style="width: 20%">{{ ticket.user }}</td>
                 <td style="width: 20%">{{ ticket.sale_date }}</td>
                 <td style="width: 20%">{{ ticket.ticket.status }}</td>
                 <td style="width: 20%">{{ ticket.t_price }}</td>
@@ -52,35 +51,31 @@
 
         {% endfor %}
 <br>
-        <div class="pagination">
-    <span class="step-links">
-        {% if page_obj.has_previous %}
-            <a href="?page=1&name={{ request.GET.name }}">&laquo; first</a>
-            <a href="?page={{ page_obj.previous_page_number }}&name={{ request.GET.name }}">previous</a>
-        {% endif %}
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li class="waves-effect"><a href="?page={{ page_obj.previous_page_number }}&name={{ request.GET.name }}">
+                <i class="material-icons">chevron_left</i></a>
+            </li>
+            {% else %}
+            <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+            {% endif %}
+            {% for i in page_obj.paginator %}
+            {% if request.GET.page == i.number  %}
+            <li class="active"><a href="?page={{i.number}}&name={{ request.GET.name }}">{{ i.number }}</a></li>
+            {% else %}
+            <li class="waves-effect"><a href="?page={{i.number}}&name={{ request.GET.name }}">{{ i.number }}</a></li>
+            {% endif %}
+            {% endfor %}
 
-        <span class="current">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-        </span>
-
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}&name={{ request.GET.name }}">next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}&name={{ request.GET.name }}">last &raquo;</a>
-        {% endif %}
-    </span>
-        </div>
-<!--        <ul class="pagination"> როცა მოვიცლი უნდა გადავაწო ამ პაგინაციაზე. -->
-<!--            <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>-->
-<!--            <li class="active"><a href="#!">1</a></li>-->
-<!--            <li class="waves-effect"><a href="#!">2</a></li>-->
-<!--            <li class="waves-effect"><a href="#!">3</a></li>-->
-<!--            <li class="waves-effect"><a href="#!">4</a></li>-->
-<!--            <li class="waves-effect"><a href="#!">5</a></li>-->
-<!--            <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>-->
-<!--        </ul>-->
-
+            {% if page_obj.has_next %}
+            <li class="waves-effect"><a href="?page={{ page_obj.next_page_number }}&name={{ request.GET.name }}">
+                <i class="material-icons">chevron_right</i></a>
+            </li>
+            {% else %}
+            <li class="disabled"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+            {% endif %}
+        </ul>
     </div>
 </div>
-
 
 {% endblock %}

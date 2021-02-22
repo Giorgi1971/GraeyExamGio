@@ -11,10 +11,3 @@ class OrderModelForm1(forms.ModelForm):
         widgets = {'sale_date': DateTimeInput()}
         model = Order
         fields = ('ticket',)
-
-
-class OrderModelForm2(forms.ModelForm):
-    class Meta:
-        widgets = {'sale_date': DateTimeInput()}
-        model = Order
-        fields = ('ticket',)

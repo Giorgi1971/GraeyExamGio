@@ -1,21 +1,11 @@
-from django.shortcuts import render
-from decimal import Decimal
-from typing import Dict, Optional
 from django.core.paginator import Paginator
-from django.shortcuts import render
-from django.db import models
-
 from django.core.handlers.wsgi import WSGIRequest
-from django.db.models import F, Sum, ExpressionWrapper, DecimalField, Count, Q
+from django.db.models import F, Sum, Count, Q
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from django.utils import timezone
-from django.views import generic
-
 from .forms import *
 from user.models import *
 from .models import *
-# Create your views here.
 
 
 def index(request: WSGIRequest):
@@ -34,28 +24,17 @@ def tickets(request: WSGIRequest):
 
 def personal(request: WSGIRequest) -> HttpResponse:
     order_form1 = OrderModelForm1()
-    order_form2 = OrderModelForm2()
     q1 = request.POST.get('ticket')
-    if q1 and request.method == 'POST':
-        order_form2 = OrderModelForm2(request.POST)
-        if order_form2.is_valid():
-            order2 = order_form1.save(commit=False)
-            order2.user_id = request.user.id
-            order2.t_price = 1
-            order2.ticket_id = request.POST['ticket']
-            order2.save()
-            tt = Ticket.objects.all().get(pk=order2.ticket_id)
-            tt.status = Ticket.StatusType.SALED
-            tt.save()
-
-    if not q1 and request.method == 'POST':
-        order_form1 = OrderModelForm1(request.POST)
-        if order_form1.is_valid():
-            order1 = order_form1.save(commit=False)
-            order1.user_id = request.user.id
-            order1.t_price = 1
-            order1.save()
-            tt = Ticket.objects.all().get(pk=order1.ticket_id)
+    if request.method == 'POST':
+        order_form = OrderModelForm1(request.POST)
+        if order_form.is_valid():
+            order3 = order_form1.save(commit=False)
+            order3.user_id = request.user.id
+            order3.t_price = 1
+            if q1:
+                order3.ticket_id = request.POST['ticket']
+            order3.save()
+            tt = Ticket.objects.all().get(pk=order3.ticket_id)
             tt.status = Ticket.StatusType.SALED
             tt.save()
 
