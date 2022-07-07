@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h4>მოგესალმებით! ბილეთის შესაძენად გაიარეთ ავტორიზაცია (Log-in)!</h4>
+    <h4>
+        <a href="{% url 'user:user_login' %}">
+        მოგესალმებით! ბილეთის შესაძენად გაიარეთ ავტორიზაცია (Log-in)!
+        </a>
+    </h4>
 
 <div class="container">
     <div class="row">

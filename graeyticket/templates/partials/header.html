@@ -1,7 +1,11 @@
 <nav style="padding= 20px;">
     <div class="nav-wrapper">
       <ul id="nav-mobile" class="left hide-on-med-and-down">
-        <li style="color: rgb(100,30,30); font-weight: bold; text-shadow: 0 0 3px #000000;"><a href="{% url 'tickets:index' %}">Home</a></li>
+        <li style="color: rgb(100,30,30); font-weight: bold; text-shadow: 0 0 3px #000000;">
+            <a href="{% url 'tickets:index' %}">
+                Home
+            </a>
+        </li>
         {% if user.is_authenticated %}
           <li style="color: rgb(100,30,30); font-weight: bold; text-shadow: 0 0 3px #000000;"><a href="{% url 'tickets:order' %}">Orders</a></li>
           <li style="color: rgb(100,30,30); font-weight: bold; text-shadow: 0 0 3px #000000;"><a href="{% url 'tickets:personal' %}">{{ user.email }}</a></li>
@@ -19,6 +23,9 @@
         {% else %}
         <li><a href="{% url 'user:user_login' %}" style="color: rgb(100,30,30); font-weight: bold; text-shadow: 0 0 3px #ffffff; float: right;">
             Log-in
+        </a></li>
+        <li><a href="{% url 'user:user_registration' %}" style="color: rgb(100,30,30); font-weight: bold; text-shadow: 0 0 3px #ffffff; float: right;">
+            Registration
         </a></li>
         {% endif %}
           <li><a href="{% url 'admin:index' %}" class="brand-logo right">
