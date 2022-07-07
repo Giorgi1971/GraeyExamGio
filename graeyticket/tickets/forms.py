@@ -11,3 +11,7 @@ class OrderModelForm1(forms.ModelForm):
         widgets = {'sale_date': DateTimeInput()}
         model = Order
         fields = ('ticket',)
+
+    def __init__(self, *args, **kwargs): 
+        super(OrderModelForm1, self).__init__(*args, **kwargs)
+        self.fields['ticket'].queryset = Ticket.objects.filter(status = 'Free')

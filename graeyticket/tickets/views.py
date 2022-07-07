@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.core.paginator import Paginator
 from django.core.handlers.wsgi import WSGIRequest
 from django.db.models import F, Sum, Count, Q
@@ -6,9 +7,25 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .forms import *
 from user.models import *
 from .models import *
+from django.views import generic
+from django.utils import timezone
+from django.views.generic import TemplateView
+
+
+class IndexView(generic.ListView):
+    template_name = 'tickets/tickets.html'
+    context_object_name = 'ticket_list'
+
+    def get_queryset(self):
+        """
+        Return the last five published questions (not including those set to be
+        published in the future).
+        """
+        return Ticket.objects.all().order_by('-pk')
 
 
 def index(request: WSGIRequest):
+    print(settings.BASE_DIR)
     if request.user.is_authenticated:
         return redirect('tickets:personal')
     return redirect('/tickets')
@@ -48,11 +65,11 @@ def personal(request: WSGIRequest) -> HttpResponse:
         earned_per_order=Sum('t_price')).aggregate(
         earned_money_year=Sum(
             'earned_per_order',
-            filter=Q(sale_date__gte=now - timezone.timedelta(days=365))
+            filter=Q(sale_date__gte=now - timezone.timedelta(days=865))
         ),
         washed_last_year=Count(
             'id',
-            filter=Q(sale_date__gte=now - timezone.timedelta(days=365))
+            filter=Q(sale_date__gte=now - timezone.timedelta(days=865))
         ),
         earned_money_month=Sum(
             'earned_per_order',
@@ -75,6 +92,7 @@ def personal(request: WSGIRequest) -> HttpResponse:
     ticket_list = Ticket.objects.all().order_by('-pk')
 
     return render(request, template_name='tickets/personal.html', context={
+        'form': order_form1,
         'form': order_form1,
         'personal': personal_page,
         'ticket_list': ticket_list,
