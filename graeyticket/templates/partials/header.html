@@ -7,7 +7,7 @@
             </a>
         </li>
         {% if user.is_authenticated %}
-          <li style="color: rgb(100,30,30); font-weight: bold; text-shadow: 0 0 3px #000000;"><a href="{% url 'tickets:order' %}">Orders</a></li>
+          <li style="color: rgb(100,30,30); font-weight: bold; text-shadow: 0 0 3px #000000;"><a href="{% url 'tickets:order' %}">My Orders</a></li>
           <li style="color: rgb(100,30,30); font-weight: bold; text-shadow: 0 0 3px #000000;"><a href="{% url 'tickets:personal' %}">{{ user.email }}</a></li>
           <li>
             <form action="{% url 'user:user_logout' %}" method="POST">

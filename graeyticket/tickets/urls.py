@@ -6,8 +6,8 @@ from .views import *
 app_name = 'tickets'
 
 urlpatterns = [
-    path('', IndexView.as_view(), name='index'),
-    path('ind', index, name='index'),
+    path('ind/', IndexView.as_view(), name='index'),
+    path('', index, name='index'),
     path('tickets/', tickets, name='tickets'),
     path('personal/', lr(personal), name='personal'),
     path('orders/', lr(order), name='order'),

@@ -21,14 +21,16 @@
                                 <p>Ticket # {{ ticket.pk }}</p>
                                 <p>{{ ticket.name }}</p>
                                 <p>Price: {{ ticket.price }} GEL.</p>
+                                <p style="color: rgb(0,0,0); font-weight: bold;">{{ ticket.status }}</p>
                             </div>
-                            <div class="card-action">
-                                {% if ticket.orders %}
-                                <span style="color: rgb(0,0,0); font-weight: bold;">{{ ticket.status }}</span>
-                                {% else %}
-                                <span style="color: rgb(200,50,50); font-weight: bold;">{{ ticket.status }}</span>
-                                {% endif %}
-                            </div>
+                            <!-- {{ ticket.orders }} -->
+                            <!-- <div class="card-action"> -->
+                                <!-- {% if ticket.orders %} -->
+                                <!-- <span >{{ ticket.status }}</span> -->
+                                <!-- {% else %} -->
+                                <!-- <span style="color: rgb(200,50,50); font-weight: bold;">{{ ticket.status }}</span> -->
+                                <!-- {% endif %} -->
+                            <!-- </div> -->
                         </div>
                     </div>
                 </div>

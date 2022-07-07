@@ -6,10 +6,11 @@
 <div class="row">
 
     <!--  გამოტანილი ყველა ბილეთი, თითოეულ გასაყიდს აქვს ყიდვის ღილაკი. -->
-    <div class="col s12 m6 l6">
+    <div class="col s12 m8 l8">
         <div class="card">
             <div class="card-content">
                 {% for ticket in ticket_list %}
+
                 {% if forloop.counter0|divisibleby:4 %}
                 <div class="row">
                     {% endif %}
@@ -49,7 +50,7 @@
     </div>
 
     <!--    აქ ქვევით გვინდა ბილეთის შეძენა -->
-    <div class="col s12 m3">
+    <div class="col s12 m2">
         <div class="card">
             <div class="card-content">
                 <p>შეარჩიეთ თავისუფალი ბილეთი!</p>
@@ -62,7 +63,6 @@
                             ბილეთის შეძენა
                             <i class="material-icons right">assignment</i>
                         </button>
-
                     </div>
                 </form>
 
@@ -71,7 +71,7 @@
     </div>
 
     <!--    აქედან ქვევით არის ნაყიდი ბილეთების თანხები -->
-    <div class="col s12 m3">
+    <div class="col s12 m2">
         <div class="row">
             <div class="card-content">
                 <ul class="col s12 collapsible">
@@ -87,7 +87,6 @@
                         </div>
                     </li>
                     <li>
-
                         <div class="collapsible-header">
                             <i class="material-icons">monetization_on</i>
                             Month
