@@ -9,6 +9,7 @@ urlpatterns = [
     path('ind/', IndexView.as_view(), name='index'),
     path('', index, name='index'),
     path('tickets/', tickets, name='tickets'),
+    path('return_ticket/', return_ticket, name='return_ticket'),
     path('personal/', lr(personal), name='personal'),
     path('orders/', lr(order), name='order'),
     ]

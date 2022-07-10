@@ -11,6 +11,7 @@ class OrderModelForm1(forms.ModelForm):
         widgets = {'sale_date': DateTimeInput()}
         model = Order
         fields = ('ticket',)
+        # fields = '__all__'
 
     def __init__(self, *args, **kwargs): 
         super(OrderModelForm1, self).__init__(*args, **kwargs)

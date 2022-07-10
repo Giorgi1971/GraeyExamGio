@@ -4,12 +4,14 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.db.models import F, Sum, Count, Q
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from requests import request
 from .forms import *
 from user.models import *
 from .models import *
 from django.views import generic
 from django.utils import timezone
 from django.views.generic import TemplateView
+from django.contrib import messages
 
 
 class IndexView(generic.ListView):
@@ -31,8 +33,41 @@ def index(request: WSGIRequest):
     return redirect('/tickets')
 
 
+def return_ticket(request: WSGIRequest):
+    order_form = OrderModelForm1()
+    q1 = request.POST.get('return_ticket')
+    if request.method == 'POST':
+        # order_form = OrderModelForm1(request.POST)
+        tick1 = Ticket.objects.all().get(pk=q1)
+        if tick1.orders:
+            user = tick1.orders.user
+            print(tick1.__dict__)
+            print(tick1.orders)
+            print(tick1.orders.user)
+            tick1.orders.delete()
+            tick1.status = Ticket.StatusType.FREE
+            user.salary += (tick1.price -1)
+            tick1.save()
+            user.save()
+            return redirect('tickets:personal')
+        else:
+            return HttpResponse('Not Valid')
+    else:
+        return HttpResponse('Hello, Not Post')
+
+
 def tickets(request: WSGIRequest):
-    ticket_list = Ticket.objects.all()
+    ticket_list = Ticket.objects.all().order_by('-pk')
+    #  ბილეთების გასუფთავება, ეგრევე უნდა გავაკომენტარო, როგორც კი გასუფთავდება.
+    # for i in ticket_list:
+    #     i.status = 'Free'
+    #     print (i)
+    #     try:
+    #         i.orders.delete()
+    #         print (i.orders)
+    #     except:
+    #         continue
+    #     i.save()
     context = {
         'ticket_list': ticket_list,
     }
@@ -40,36 +75,47 @@ def tickets(request: WSGIRequest):
 
 
 def personal(request: WSGIRequest) -> HttpResponse:
-    order_form1 = OrderModelForm1()
+    order_form = OrderModelForm1()
     q1 = request.POST.get('ticket')
     if request.method == 'POST':
         order_form = OrderModelForm1(request.POST)
         if order_form.is_valid():
-            order3 = order_form1.save(commit=False)
+            tt = Ticket.objects.all().get(pk=q1)
+            print(tt)
+            user = request.user
+            if user.salary >= tt.price:
+                user.salary -= tt.price
+            else:
+                # Want to return message error !!!!!!!!!!!!!!!!!!!!!!!!!!!!!! but not can
+                messages.error(request, 'Not eneaf Money.')
+                return redirect('tickets:personal') 
+            order3 = order_form.save(commit=False)
             order3.user_id = request.user.id
-            order3.t_price = 1
+            # order3.t_price = 1
             if q1:
                 order3.ticket_id = request.POST['ticket']
             order3.save()
-            tt = Ticket.objects.all().get(pk=order3.ticket_id)
+
+            user.save()
             tt.status = Ticket.StatusType.SALED
             tt.save()
 
     personal_page: User = get_object_or_404(User.objects.all(), pk=request.user.id)
-    last = personal_page.orders.all().order_by('-sale_date')
+    last: Order = personal_page.orders.all().order_by('-sale_date')
     if len(last) > 0:
         last = last[0]
     now = timezone.now()
 
     person_salary_info = personal_page.orders.all().annotate(
-        earned_per_order=Sum('t_price')).aggregate(
+        earned_per_order=Sum('t_price')
+        ).aggregate(
         earned_money_year=Sum(
             'earned_per_order',
-            filter=Q(sale_date__gte=now - timezone.timedelta(days=865))
+            filter=Q(sale_date__gte=now - timezone.timedelta(days=365))
         ),
         washed_last_year=Count(
             'id',
-            filter=Q(sale_date__gte=now - timezone.timedelta(days=865))
+            filter=Q(sale_date__gte=now - timezone.timedelta(days=365))
         ),
         earned_money_month=Sum(
             'earned_per_order',
@@ -86,14 +132,13 @@ def personal(request: WSGIRequest) -> HttpResponse:
         washed_last_week=Count(
             'id',
             filter=Q(sale_date__gte=now - timezone.timedelta(days=7))
-        )
+        ),
     )
 
     ticket_list = Ticket.objects.all().order_by('-pk')
 
     return render(request, template_name='tickets/personal.html', context={
-        'form': order_form1,
-        'form': order_form1,
+        'form': order_form,
         'personal': personal_page,
         'ticket_list': ticket_list,
         'last': last,

@@ -18,7 +18,7 @@
                     <div class="col s12 m3 l3 center">
                         <div class="row">
                             <div class="col s12">
-                                <div class="card" style="background-color: rgb(130,200,180);">
+                                <div class="card" style="background-color: #e0e0e0;">
                                     <div class="card-content">
                                         <p>Ticket {{ ticket.pk }}</p>
                                         <p>{{ ticket.name }}</p>
@@ -26,14 +26,23 @@
                                     </div>
                                     <div class="card-action">
                                         {% if ticket.orders %}
-                                        <span style="color: rgb(0,0,0); font-weight: bold;">SALED</span>
+                                            {% if ticket.orders.user == request.user %}
+                                            <form action="{% url 'tickets:return_ticket' %}" method="post">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="return_ticket" value="{{ ticket.pk }}">
+                                                <input type="hidden" name="action" value="">
+                                                <input type="submit" style="color:rgb(200,100,50); font-weight: bold;" name="return_back" value="RETURN">
+                                            </form>
+                                            {% else %}
+                                                <span style="color: rgb(0,0,0); font-weight: bold;">SALED</span>
+                                            {% endif %}
                                         {% else %}
-                <form action="{% url 'tickets:personal' %}" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="ticket" value="{{ ticket.pk }}">
-                    <input type="hidden" name="action" value="">
-                    <input type="submit" style="color:rgb(200,50,50); font-weight: bold;" name="buy" value="BUY">
-                </form>
+                                            <form action="{% url 'tickets:personal' %}" method="post">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="ticket" value="{{ ticket.pk }}">
+                                                <input type="hidden" name="action" value="">
+                                                <input type="submit" style="color:rgb(200,100,50); font-weight: bold;" name="buy" value="BUY">
+                                            </form>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -44,13 +53,15 @@
                 </div>
                 {% endif %}
                 {% endfor %}
-
             </div>
         </div>
     </div>
 
     <!--    აქ ქვევით გვინდა ბილეთის შეძენა -->
     <div class="col s12 m2">
+        {% if messages %} 
+        {{ messages.error }}
+        {% endif %}
         <div class="card">
             <div class="card-content">
                 <p>შეარჩიეთ თავისუფალი ბილეთი!</p>
@@ -116,6 +127,12 @@
                         {% else %}
                         <p><b>თქვენ ჯერ არ შეგიძენიათ ბილეთი.</b></p>
                         {% endif %}
+                    </li>
+                    <li>
+                        დარჩენილი თანხა: {{ personal.salary }} ლარი.
+                    </li>
+                    <li>
+                        დარჩენილი თანხა: {{ request.user }} ლარი.
                     </li>
                 </ul>
             </div>
